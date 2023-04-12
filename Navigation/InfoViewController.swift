@@ -13,12 +13,12 @@ class InfoViewController: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("back", for: .normal)
-        button.backgroundColor = UIColor(red: 0.00, green: 0.50, blue: 1.00, alpha: 0.45)
-        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = UIColor.systemBlue
+        button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 20
-        
         return button
     }()
+    
     private lazy var alertButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -26,7 +26,6 @@ class InfoViewController: UIViewController {
         button.backgroundColor = UIColor.systemOrange
         button.setTitleColor(.black, for: .normal)
         button.layer.cornerRadius = 20
-        
         return button
     }()
     
@@ -35,6 +34,11 @@ class InfoViewController: UIViewController {
         view.backgroundColor = .systemGray6
         title = "title"
         
+        view.addSubview(alertButton)
+        view.addSubview(actionButton)
+        
+        alertButton.addTarget(self, action: #selector(showAlert), for: .touchUpInside)
+        actionButton.addTarget(self, action: #selector(buttonPressed(_: )), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -42,12 +46,6 @@ class InfoViewController: UIViewController {
         
         alertButton.frame = CGRect(x: 155, y: 70, width: 80, height: 40)
         actionButton.frame = CGRect(x: 155, y: 120, width: 80, height: 40)
-        
-        view.addSubview(alertButton)
-        view.addSubview(actionButton)
-        
-        alertButton.addTarget(self, action: #selector(showAlert), for: .touchUpInside)
-        actionButton.addTarget(self, action: #selector(buttonPressed(_: )), for: .touchUpInside)
     }
     
     @objc func showAlert() {
