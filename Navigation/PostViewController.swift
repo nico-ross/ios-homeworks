@@ -15,13 +15,18 @@ class PostViewController: UIViewController {
         super.viewDidLoad()
         title = newPostTitle
         view.backgroundColor = UIColor(red: 0.85, green: 0.95, blue: 1.00, alpha: 1.00)
+        let barButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "info.circle"),
+            style: .plain,
+            target: self,
+            action: #selector(showDetails)
+        )
+        navigationItem.setRightBarButton(barButtonItem, animated: false)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        let barButtonItem = UIBarButtonItem(image: UIImage(systemName: "info.circle"), style: .plain, target: self, action: #selector(showDetails))
-        navigationItem.setRightBarButton(barButtonItem, animated: false)
     }
     
     @objc func showDetails() {

@@ -11,33 +11,29 @@ class FeedViewController: UIViewController {
     
     let newPostItem = Post(title: "New Post")
     
+    private var newPostButton: UIButton = {
+        let button = UIButton()
+//        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Begin your Story", for: .normal)
+        button.backgroundColor = UIColor.systemBlue
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 20
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Feed"
         view.backgroundColor = .systemGray6
+        
+        view.addSubview(newPostButton)
+        newPostButton.addTarget(self, action: #selector(showDetails), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        let button = UIButton(type: .system)
-        button.frame = CGRect(x: 95, y: 120, width: 200, height: 45)
-//        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Begin your Story", for: .normal)
-        button.backgroundColor = UIColor(red: 0.00, green: 0.50, blue: 1.00, alpha: 0.45)
-        button.setTitleColor(.black, for: .normal)
-        
-        button.layer.cornerRadius = 20
-        
-        view.addSubview(button)
-        button.addTarget(self, action: #selector(showDetails), for: .touchUpInside)
-        
-//        NSLayoutConstraint.activate([
-//            button.widthAnchor.constraint(equalToConstant: 200),
-//            button.heightAnchor.constraint(equalToConstant: 45),
-//            button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-//            button.bottomAnchor.constraint(equalToSystemSpacingBelow: self.view.topAnchor, multiplier: 20)
-//        ])
+        newPostButton.frame = CGRect(x: 95, y: 120, width: 200, height: 45)
     }
     
     @objc func showDetails() {
@@ -45,5 +41,11 @@ class FeedViewController: UIViewController {
         postViewController.newPostTitle = newPostItem.title
         navigationController?.pushViewController(postViewController, animated: false)
     }
-    
 }
+
+//        NSLayoutConstraint.activate([
+//            button.widthAnchor.constraint(equalToConstant: 200),
+//            button.heightAnchor.constraint(equalToConstant: 45),
+//            button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+//            button.bottomAnchor.constraint(equalToSystemSpacingBelow: self.view.topAnchor, multiplier: 20)
+//        ])
