@@ -9,23 +9,23 @@ import UIKit
 
 class InfoViewController: UIViewController {
     
-    private lazy var actionButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("back", for: .normal)
-        button.backgroundColor = UIColor.systemBlue
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 20
-        return button
-    }()
-    
     private lazy var alertButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("wtf?", for: .normal)
         button.backgroundColor = UIColor.systemOrange
         button.setTitleColor(.black, for: .normal)
         button.layer.cornerRadius = 20
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private lazy var actionButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("back", for: .normal)
+        button.backgroundColor = UIColor.systemBlue
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 20
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -39,13 +39,8 @@ class InfoViewController: UIViewController {
         
         alertButton.addTarget(self, action: #selector(showAlert), for: .touchUpInside)
         actionButton.addTarget(self, action: #selector(buttonPressed(_: )), for: .touchUpInside)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
         
-        alertButton.frame = CGRect(x: 155, y: 70, width: 80, height: 40)
-        actionButton.frame = CGRect(x: 155, y: 120, width: 80, height: 40)
+        setupConstraints()
     }
     
     @objc func showAlert() {
@@ -67,5 +62,20 @@ class InfoViewController: UIViewController {
     
     @objc func buttonPressed(_ sender: UIButton) {
         dismiss(animated: true)
+    }
+    
+    private func setupConstraints() {
+        
+        NSLayoutConstraint.activate([
+            alertButton.widthAnchor.constraint(equalToConstant: 80),
+            alertButton.heightAnchor.constraint(equalToConstant: 40),
+            alertButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            alertButton.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 90),
+            
+            actionButton.widthAnchor.constraint(equalToConstant: 80),
+            actionButton.heightAnchor.constraint(equalToConstant: 40),
+            actionButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            actionButton.topAnchor.constraint(equalTo: self.alertButton.bottomAnchor, constant: 10)
+        ])
     }
 }
