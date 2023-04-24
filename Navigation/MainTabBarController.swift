@@ -24,11 +24,12 @@ class MainTabBarController: UITabBarController {
         feedNavigationViewController.tabBarItem.title = "Feed"
         feedNavigationViewController.tabBarItem.image = UIImage(systemName: "scroll.fill")
         
-        let profileViewController = ProfileViewController()
+        let profileViewController = LogInViewController()
         
         let profileNavigationViewController = UINavigationController(rootViewController: profileViewController)
         profileNavigationViewController.tabBarItem.title = "Profile"
         profileNavigationViewController.tabBarItem.image = UIImage(systemName: "person.circle.fill")
+//        profileNavigationViewController.navigationBar.isHidden = true
 
         viewControllers = [feedNavigationViewController, profileNavigationViewController]
     }

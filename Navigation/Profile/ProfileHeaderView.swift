@@ -9,20 +9,22 @@ import UIKit
 
 class ProfileHeaderView: UIView {
     
-    private lazy var avatarImageView: UIView = {
-        let view = UIView()
-        view.layer.contents = UIImage(named: "icon-256x256")?.cgImage
-//        view.layer.cornerRadius = 65
-        view.layer.borderColor = UIColor.white.cgColor
-        view.layer.borderWidth = 3
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    private lazy var avatarImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "icon-256x256")
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        //        imageView.layer.cornerRadius = 65
+        imageView.layer.borderColor = UIColor.white.cgColor
+        imageView.layer.borderWidth = 3
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
     private lazy var fullNameLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
-        label.text = "Profile Name"
+        label.text = "Vasya Pupkin"
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 18.0, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -61,18 +63,22 @@ class ProfileHeaderView: UIView {
         textField.layer.cornerRadius = 12
         textField.placeholder = "Write new status"
         textField.textAlignment = .center
+        
+        textField.autocorrectionType = UITextAutocorrectionType.no
+        textField.keyboardType = UIKeyboardType.default
+        textField.returnKeyType = UIReturnKeyType.done
+        textField.clearButtonMode = UITextField.ViewMode.whileEditing
+        
         textField.layer.borderColor = UIColor.black.cgColor
         textField.layer.borderWidth = 1
         textField.textColor = .black
         textField.font = UIFont.systemFont(ofSize: 15.0, weight: .regular)
         textField.translatesAutoresizingMaskIntoConstraints = false
         
-        textField.addTarget(self, action: #selector(statusTextChanged), for: .editingChanged)
+        textField.delegate = self
         return textField
     }()
-    
-    private var statusText: String = "Waiting for something..."
-    
+        
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -112,12 +118,12 @@ class ProfileHeaderView: UIView {
             statusLabel.heightAnchor.constraint(equalToConstant: statusLabel.intrinsicContentSize.height),
             statusLabel.topAnchor.constraint(equalTo: fullNameLabel.bottomAnchor, constant: 24),
             statusLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
-
+            
             setStatusButton.heightAnchor.constraint(equalToConstant: 50),
             setStatusButton.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor, constant: 16),
             setStatusButton.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor, constant: -16),
             setStatusButton.topAnchor.constraint(equalTo: statusTextField.bottomAnchor, constant: 5),
-
+            
             statusTextField.heightAnchor.constraint(equalToConstant: 40),
             statusTextField.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
             statusTextField.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor, constant: -16),
@@ -132,15 +138,19 @@ class ProfileHeaderView: UIView {
     }
     
     @objc func buttonPressed() {
-        statusLabel.text = statusText
-    }
-    
-    @objc func statusTextChanged(_ textField: UITextField) {
-        guard let textFieldText = textField.text else { return }
-        if textField.text == "" {
-            statusText = "Waiting for something..."
+        guard let textFieldText = statusTextField.text else { return }
+        if textFieldText == "" {
+            statusLabel.text = "Waiting for something..."
         } else {
-            statusText = textFieldText
+            statusLabel.text = textFieldText
         }
+    }
+}
+    
+extension ProfileHeaderView: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
