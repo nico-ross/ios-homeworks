@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ProfileHeaderView: UIView {
+final class ProfileHeaderView: UIView {
     
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
@@ -35,7 +35,7 @@ class ProfileHeaderView: UIView {
         let label = UILabel()
         label.text = "Waiting for something..."
         label.textColor = .gray
-        label.font = UIFont.systemFont(ofSize: 14.0, weight: .regular)
+        label.font = UIFont.systemFont(ofSize: 15.0, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -62,7 +62,8 @@ class ProfileHeaderView: UIView {
         textField.layer.backgroundColor = UIColor.white.cgColor
         textField.layer.cornerRadius = 12
         textField.placeholder = "Write new status"
-        textField.textAlignment = .center
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        textField.leftViewMode = .always
         
         textField.autocorrectionType = UITextAutocorrectionType.no
         textField.keyboardType = UIKeyboardType.default
@@ -101,33 +102,35 @@ class ProfileHeaderView: UIView {
     }
     
     private func setupConstraints() {
-        let safeAreaGuide = self.safeAreaLayoutGuide
-        
+//        let safeAreaGuide = self.safeAreaLayoutGuide
+        let inset: CGFloat = 16
+
         NSLayoutConstraint.activate([
             avatarImageView.widthAnchor.constraint(equalToConstant: 130),
             avatarImageView.heightAnchor.constraint(equalToConstant: 130),
-            avatarImageView.topAnchor.constraint(equalTo: safeAreaGuide.topAnchor, constant: 16),
-            avatarImageView.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor, constant: 16),
+            avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: inset),
+            avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset),
             
-            fullNameLabel.widthAnchor.constraint(equalToConstant: fullNameLabel.intrinsicContentSize.width),
-            fullNameLabel.heightAnchor.constraint(equalToConstant: fullNameLabel.intrinsicContentSize.height),
-            fullNameLabel.topAnchor.constraint(equalTo: safeAreaGuide.topAnchor, constant: 27 + 15),
-            fullNameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
+//            fullNameLabel.widthAnchor.constraint(equalToConstant: fullNameLabel.intrinsicContentSize.width),
+//            fullNameLabel.heightAnchor.constraint(equalToConstant: fullNameLabel.intrinsicContentSize.height),
+            fullNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 27),
+            fullNameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: inset),
             
-            statusLabel.widthAnchor.constraint(equalToConstant: statusLabel.intrinsicContentSize.width),
-            statusLabel.heightAnchor.constraint(equalToConstant: statusLabel.intrinsicContentSize.height),
-            statusLabel.topAnchor.constraint(equalTo: fullNameLabel.bottomAnchor, constant: 24),
-            statusLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
-            
-            setStatusButton.heightAnchor.constraint(equalToConstant: 50),
-            setStatusButton.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor, constant: 16),
-            setStatusButton.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor, constant: -16),
-            setStatusButton.topAnchor.constraint(equalTo: statusTextField.bottomAnchor, constant: 5),
+//            statusLabel.widthAnchor.constraint(equalToConstant: statusLabel.intrinsicContentSize.width),
+//            statusLabel.heightAnchor.constraint(equalToConstant: statusLabel.intrinsicContentSize.height),
+            statusLabel.bottomAnchor.constraint(equalTo: statusTextField.topAnchor, constant: -5),
+            statusLabel.leadingAnchor.constraint(equalTo: fullNameLabel.leadingAnchor),
             
             statusTextField.heightAnchor.constraint(equalToConstant: 40),
-            statusTextField.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
-            statusTextField.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor, constant: -16),
-            statusTextField.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 5)
+            statusTextField.leadingAnchor.constraint(equalTo: statusLabel.leadingAnchor, constant: -9),
+            statusTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset),
+            statusTextField.bottomAnchor.constraint(equalTo: avatarImageView.bottomAnchor),
+            
+            setStatusButton.heightAnchor.constraint(equalToConstant: 50),
+            setStatusButton.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: inset),
+            setStatusButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset),
+            setStatusButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset),
+            setStatusButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -inset)
         ])
     }
     

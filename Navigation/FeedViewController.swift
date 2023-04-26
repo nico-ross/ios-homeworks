@@ -9,7 +9,7 @@ import UIKit
 
 class FeedViewController: UIViewController {
     
-    let newPostItem = Post(title: "New Post")
+    let newPostItem = NewPost(title: "New Post")
     
     private lazy var firstPostButton: UIButton = {
         let button = UIButton()
@@ -22,6 +22,10 @@ class FeedViewController: UIViewController {
         button.layer.shadowOpacity = 0.5
         button.layer.shadowRadius = 3.0
         button.layer.shadowColor = UIColor.black.cgColor
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        button.addTarget(self, action: #selector(showDetails), for: .touchUpInside)
         return button
     }()
     
@@ -36,6 +40,10 @@ class FeedViewController: UIViewController {
         button.layer.shadowOpacity = 0.5
         button.layer.shadowRadius = 3.0
         button.layer.shadowColor = UIColor.black.cgColor
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        button.addTarget(self, action: #selector(showDetails), for: .touchUpInside)
         return button
     }()
     
@@ -54,30 +62,35 @@ class FeedViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Feed"
-        view.backgroundColor = UIColor(red: 0.85, green: 0.95, blue: 1.00, alpha: 1.00)
-//        view.backgroundColor = .systemGray6
         
-        view.addSubview(buttonStackView)
-        
-        firstPostButton.addTarget(self, action: #selector(showDetails), for: .touchUpInside)
-        secondPostButton.addTarget(self, action: #selector(showDetails), for: .touchUpInside)
-        
+        setupView()
+        addSubviews()
         setupConstraints()
+    }
+    
+    private func setupView() {
+        navigationItem.title = "Feed"
+        view.backgroundColor = UIColor.systemGray6
+//        view.backgroundColor = UIColor(red: 0.85, green: 0.95, blue: 1.00, alpha: 1.00)
+    }
+    
+    private func addSubviews() {
+        view.addSubview(buttonStackView)
+    }
+    
+    private func setupConstraints() {
+        
+        NSLayoutConstraint.activate([
+            buttonStackView.widthAnchor.constraint(equalToConstant: 190),
+            buttonStackView.heightAnchor.constraint(equalToConstant: 110),
+            buttonStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            buttonStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
     
     @objc func showDetails() {
         let postViewController = PostViewController()
         postViewController.newPostTitle = newPostItem.title
         navigationController?.pushViewController(postViewController, animated: false)
-    }
-    
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            buttonStackView.widthAnchor.constraint(equalToConstant: 190),
-            buttonStackView.heightAnchor.constraint(equalToConstant: 110),
-            buttonStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            buttonStackView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
-        ])
     }
 }
