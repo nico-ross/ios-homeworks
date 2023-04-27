@@ -11,18 +11,27 @@ class PostViewController: UIViewController {
     
     var newPostTitle: String?
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        title = newPostTitle
-        view.backgroundColor = UIColor(red: 0.85, green: 0.95, blue: 1.00, alpha: 1.00)
-        
-        let barButtonItem = UIBarButtonItem(
+    private lazy var barButtonItem: UIBarButtonItem = {
+        let burButton = UIBarButtonItem(
             image: UIImage(systemName: "info.circle"),
             style: .plain,
             target: self,
             action: #selector(showDetails)
         )
+        return burButton
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupView()
+    }
+    
+    private func setupView() {
+        navigationItem.title = newPostTitle
+        view.backgroundColor = UIColor.systemGray6
+//        view.backgroundColor = UIColor(red: 0.85, green: 0.95, blue: 1.00, alpha: 1.00)
+        
         navigationItem.setRightBarButton(barButtonItem, animated: false)
     }
     

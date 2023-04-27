@@ -113,7 +113,7 @@ class LogInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupMainView()
+        setupView()
         addSubviews()
         setupConstraints()
     }
@@ -139,7 +139,7 @@ class LogInViewController: UIViewController {
     }
     
     
-    private func setupMainView() {
+    private func setupView() {
         view.backgroundColor = UIColor.white
         navigationController?.navigationBar.isHidden = true
     }
@@ -157,8 +157,8 @@ class LogInViewController: UIViewController {
         let safeAreaGuide = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: safeAreaGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: safeAreaGuide.bottomAnchor),
             

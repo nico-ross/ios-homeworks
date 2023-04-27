@@ -7,17 +7,19 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
     
-    private lazy var profileHeaderView = {
-        let view = ProfileHeaderView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    fileprivate let data = Post.make()
+    
+    private lazy var postTableView: UITableView = {
+        let tableView = UITableView.init(frame: .zero, style: .grouped)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
     }()
     
-    private lazy var moveTitleButton: UIButton = {
+    private lazy var whatTheButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Profile Button", for: .normal)
+        button.setTitle("closed for renovation", for: .normal)
         button.backgroundColor = UIColor.systemBlue
         button.layer.opacity = 0.4
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -28,32 +30,100 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Profile"
-//        view.backgroundColor = .lightGray
-        view.backgroundColor = UIColor(red: 0.85, green: 0.95, blue: 1.00, alpha: 1.00)
         
-        view.addSubview(profileHeaderView)
-        view.addSubview(moveTitleButton)
+        setupView()
+        addSubviews()
         setupConstraints()
+        tuneTableView()
+    }
+    
+    private func setupView() {
+        view.backgroundColor = UIColor.systemGray6
+        navigationController?.navigationBar.isHidden = true
+//        navigationItem.title = "Profile"
+//        navigationController?.navigationBar.prefersLargeTitles = false
+    }
+    
+    private func addSubviews() {
+        view.addSubview(postTableView)
+        view.addSubview(whatTheButton)
     }
     
     private func setupConstraints() {
         let safeAreaGuide = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            profileHeaderView.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor, constant: 0),
-            profileHeaderView.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor, constant: 0),
-            profileHeaderView.topAnchor.constraint(equalTo: safeAreaGuide.topAnchor, constant: 0),
-            profileHeaderView.heightAnchor.constraint(equalToConstant: 220),
+            postTableView.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor),
+            postTableView.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor),
+            postTableView.topAnchor.constraint(equalTo: safeAreaGuide.topAnchor),
+            postTableView.bottomAnchor.constraint(equalTo: whatTheButton.topAnchor),
             
-            moveTitleButton.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor, constant: 0),
-            moveTitleButton.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor, constant: 0),
-            moveTitleButton.bottomAnchor.constraint(equalTo: safeAreaGuide.bottomAnchor, constant: 0),
-            moveTitleButton.heightAnchor.constraint(equalToConstant: 50)
+            whatTheButton.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor),
+            whatTheButton.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor),
+            whatTheButton.bottomAnchor.constraint(equalTo: safeAreaGuide.bottomAnchor),
+            whatTheButton.heightAnchor.constraint(equalToConstant: 50)
         ])
+    }
+    
+    private func tuneTableView() {
+        postTableView.rowHeight = UITableView.automaticDimension
+        postTableView.estimatedRowHeight = 520.0
+        
+        let headerView = ProfileHeaderView()
+        postTableView.setAndLayoutTableHeaderView(header: headerView)
+        
+        
+        postTableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CustomTableViewCell.identifier)
+        
+        postTableView.dataSource = self
+        postTableView.delegate = self
     }
     
     @objc func buttonPressed(_ sender: UIButton) {
         print("Empty button")
+    }
+}
+
+extension ProfileViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        data.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: CustomTableViewCell.identifier,
+            for: indexPath
+        ) as? CustomTableViewCell else { fatalError("could not dequeueReusableCell") }
+        
+        cell.setupCell(data[indexPath.row])
+        return cell
+    }
+}
+
+extension ProfileViewController: UITableViewDelegate {
+    
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        let headerView = ProfileHeaderView()
+//
+//        return headerView
+//    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        UIView()
+    }
+}
+
+extension UITableView {
+    //set the tableHeaderView so that the required height can be determined, update the header's frame and set it again
+    func setAndLayoutTableHeaderView(header: UIView) {
+        self.tableHeaderView = header
+        self.tableHeaderView?.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            header.widthAnchor.constraint(equalTo: self.widthAnchor)
+        ])
+        header.setNeedsLayout()
+        header.layoutIfNeeded()
+        header.frame.size =  header.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        self.tableHeaderView = header
     }
 }
