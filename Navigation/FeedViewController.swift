@@ -14,7 +14,7 @@ class FeedViewController: UIViewController {
     private lazy var firstPostButton: UIButton = {
         let button = UIButton()
         button.setTitle("Begin your Story", for: .normal)
-        button.backgroundColor = UIColor.systemBlue
+        button.backgroundColor = UIColor(named: "main-blue")
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 20
         //shadows
@@ -32,7 +32,7 @@ class FeedViewController: UIViewController {
     private lazy var secondPostButton: UIButton = {
         let button = UIButton()
         button.setTitle("Start your Story", for: .normal)
-        button.backgroundColor = UIColor.systemBlue
+        button.backgroundColor = UIColor(named: "main-blue")
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 20
         //shadows

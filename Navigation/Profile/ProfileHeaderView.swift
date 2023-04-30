@@ -14,7 +14,6 @@ final class ProfileHeaderView: UIView {
         imageView.image = UIImage(named: "icon-256x256")
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        //        imageView.layer.cornerRadius = 65
         imageView.layer.borderColor = UIColor.white.cgColor
         imageView.layer.borderWidth = 3
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -40,23 +39,6 @@ final class ProfileHeaderView: UIView {
         return label
     }()
     
-    private lazy var setStatusButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Show status", for: .normal)
-        button.backgroundColor = UIColor.systemBlue
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 14
-        //shadows
-        button.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
-        button.layer.shadowOpacity = 0.5
-        button.layer.shadowRadius = 3.0
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
-        return button
-    }()
-    
     private lazy var statusTextField: UITextField = {
         let textField = UITextField()
         textField.layer.backgroundColor = UIColor.white.cgColor
@@ -79,7 +61,25 @@ final class ProfileHeaderView: UIView {
         textField.delegate = self
         return textField
     }()
+    
+    private lazy var setStatusButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Show status", for: .normal)
+        button.backgroundColor = UIColor(named: "main-blue")
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        button.layer.cornerRadius = 14
+        //shadows
+        button.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+        button.layer.shadowOpacity = 0.5
+        button.layer.shadowRadius = 3.0
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
         
+        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        return button
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -92,17 +92,14 @@ final class ProfileHeaderView: UIView {
     }
     
     private func addSubviews() {
-        translatesAutoresizingMaskIntoConstraints = false
-        
         addSubview(avatarImageView)
         addSubview(fullNameLabel)
         addSubview(statusLabel)
-        addSubview(setStatusButton)
         addSubview(statusTextField)
+        addSubview(setStatusButton)
     }
     
     private func setupConstraints() {
-//        let safeAreaGuide = self.safeAreaLayoutGuide
         let inset: CGFloat = 16
 
         NSLayoutConstraint.activate([
@@ -111,18 +108,16 @@ final class ProfileHeaderView: UIView {
             avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: inset),
             avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset),
             
-//            fullNameLabel.widthAnchor.constraint(equalToConstant: fullNameLabel.intrinsicContentSize.width),
-//            fullNameLabel.heightAnchor.constraint(equalToConstant: fullNameLabel.intrinsicContentSize.height),
             fullNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 27),
             fullNameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: inset),
+            fullNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset),
             
-//            statusLabel.widthAnchor.constraint(equalToConstant: statusLabel.intrinsicContentSize.width),
-//            statusLabel.heightAnchor.constraint(equalToConstant: statusLabel.intrinsicContentSize.height),
             statusLabel.bottomAnchor.constraint(equalTo: statusTextField.topAnchor, constant: -5),
             statusLabel.leadingAnchor.constraint(equalTo: fullNameLabel.leadingAnchor),
+            statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset),
             
             statusTextField.heightAnchor.constraint(equalToConstant: 40),
-            statusTextField.leadingAnchor.constraint(equalTo: statusLabel.leadingAnchor, constant: -9),
+            statusTextField.leadingAnchor.constraint(equalTo: statusLabel.leadingAnchor, constant: -10),
             statusTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset),
             statusTextField.bottomAnchor.constraint(equalTo: avatarImageView.bottomAnchor),
             

@@ -12,7 +12,7 @@ class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tabBar.backgroundColor = .white
-        tabBar.tintColor = UIColor.init(red: 0.00, green: 0.50, blue: 1.00, alpha: 0.80)
+        tabBar.tintColor = UIColor(named: "main-blue")
         tabBar.unselectedItemTintColor = .systemGray2
 //        tabBar.layer.borderColor = .init(gray: 0.7, alpha: 0.9)
 //        tabBar.layer.borderWidth = 1

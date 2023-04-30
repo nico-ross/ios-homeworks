@@ -14,39 +14,31 @@ final class ProfileViewController: UIViewController {
     private lazy var postTableView: UITableView = {
         let tableView = UITableView.init(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
-    }()
-    
-    private lazy var whatTheButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("closed for renovation", for: .normal)
-        button.backgroundColor = UIColor.systemBlue
-        button.layer.opacity = 0.4
-        button.translatesAutoresizingMaskIntoConstraints = false
         
-        button.addTarget(self, action: #selector(buttonPressed(_: )), for: .touchUpInside)
-        return button
+        return tableView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupView()
         addSubviews()
         setupConstraints()
         tuneTableView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setupView()
+    }
+    
     private func setupView() {
         view.backgroundColor = UIColor.systemGray6
         navigationController?.navigationBar.isHidden = true
-//        navigationItem.title = "Profile"
-//        navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     private func addSubviews() {
         view.addSubview(postTableView)
-        view.addSubview(whatTheButton)
     }
     
     private func setupConstraints() {
@@ -56,45 +48,44 @@ final class ProfileViewController: UIViewController {
             postTableView.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor),
             postTableView.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor),
             postTableView.topAnchor.constraint(equalTo: safeAreaGuide.topAnchor),
-            postTableView.bottomAnchor.constraint(equalTo: whatTheButton.topAnchor),
-            
-            whatTheButton.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor),
-            whatTheButton.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor),
-            whatTheButton.bottomAnchor.constraint(equalTo: safeAreaGuide.bottomAnchor),
-            whatTheButton.heightAnchor.constraint(equalToConstant: 50)
+            postTableView.bottomAnchor.constraint(equalTo: safeAreaGuide.bottomAnchor)
         ])
     }
     
     private func tuneTableView() {
-        postTableView.rowHeight = UITableView.automaticDimension
-        postTableView.estimatedRowHeight = 520.0
-        
-        let headerView = ProfileHeaderView()
-        postTableView.setAndLayoutTableHeaderView(header: headerView)
-        
-        
         postTableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CustomTableViewCell.identifier)
-        
+        postTableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: PhotosTableViewCell.identifier)
         postTableView.dataSource = self
         postTableView.delegate = self
-    }
-    
-    @objc func buttonPressed(_ sender: UIButton) {
-        print("Empty button")
+        postTableView.rowHeight = UITableView.automaticDimension
+//        postTableView.estimatedRowHeight = 530.0
+        
+//        let headerView = ProfileHeaderView()
+//        postTableView.setAndLayoutTableHeaderView(header: headerView)
     }
 }
 
 extension ProfileViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        data.count
+        guard section == 1 else { return 1 }
+        return data.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard indexPath.section == 1 else {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: PhotosTableViewCell.identifier,
+                for: indexPath
+            ) as? PhotosTableViewCell else { fatalError("could not dequeueReusableCell") }
+            return cell
+        }
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: CustomTableViewCell.identifier,
             for: indexPath
         ) as? CustomTableViewCell else { fatalError("could not dequeueReusableCell") }
-        
         cell.setupCell(data[indexPath.row])
         return cell
     }
@@ -102,15 +93,30 @@ extension ProfileViewController: UITableViewDataSource {
 
 extension ProfileViewController: UITableViewDelegate {
     
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let headerView = ProfileHeaderView()
-//
-//        return headerView
-//    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        switch section {
+        case 0:
+            return ProfileHeaderView()
+        case 1:
+            return PostHeaderView()
+        default:
+            return UIView()
+        }
+    }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        UIView()
+        return UIView()
     }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return .leastNonzeroMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.section == 0 else { return }
+        navigationController?.pushViewController(PhotosViewController(), animated: true)
+    }
+    
 }
 
 extension UITableView {
