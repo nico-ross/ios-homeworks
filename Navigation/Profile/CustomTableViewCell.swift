@@ -10,13 +10,6 @@ import UIKit
 
 final class CustomTableViewCell: UITableViewCell {
     
-//    private lazy var cellContentView: UIView = {
-//        let view = UIView()
-//        view.backgroundColor = UIColor.white
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
-    
     private lazy var authorLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
@@ -100,13 +93,7 @@ final class CustomTableViewCell: UITableViewCell {
         let screenWidth = screenRect.size.width
 
         NSLayoutConstraint.activate([
-//            cellContentView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
-//            cellContentView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
-//            cellContentView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
-//            cellContentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
-            
-//            authorLabel.widthAnchor.constraint(equalToConstant: self.intrinsicContentSize.width),
-//            authorLabel.heightAnchor.constraint(equalToConstant: self.intrinsicContentSize.height),
+
             authorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
             authorLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
             authorLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: inset),

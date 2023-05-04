@@ -21,8 +21,8 @@ class InfoViewController: UIViewController {
     
     private lazy var actionButton: UIButton = {
         let button = UIButton()
-        button.setTitle("back", for: .normal)
-        button.backgroundColor = UIColor.systemBlue
+        button.setTitle("Back", for: .normal)
+        button.backgroundColor = UIColor(named: "main-blue")
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 20
         button.translatesAutoresizingMaskIntoConstraints = false

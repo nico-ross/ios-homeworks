@@ -97,10 +97,11 @@ class LogInViewController: UIViewController {
     
     private lazy var loginButton: UIButton = {
         let button = UIButton()
+        button.backgroundColor = UIColor(named: "main-blue")
         button.setTitle("Log in", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 10
-        button.layer.contents = UIImage(named: "blue_pixel")?.cgImage
+//        button.layer.contents = UIImage(named: "blue-pixel")?.cgImage
         button.contentMode = .scaleToFill
         button.clipsToBounds = true
         
