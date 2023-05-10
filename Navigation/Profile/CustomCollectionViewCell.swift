@@ -11,11 +11,13 @@ final class CustomCollectionViewCell: UICollectionViewCell {
     
     private lazy var photoImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = UIColor.black
         imageView.contentMode = .scaleAspectFit
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
+    
+    // MARK: - Lyfe cycle
     
     override init(frame: CGRect) {
         super .init(frame: frame)
@@ -38,7 +40,7 @@ final class CustomCollectionViewCell: UICollectionViewCell {
         photoImageView.image = UIImage(named: data.image)
     }
     
-    // MARK: - Private Methods
+    // MARK: - Private methods
     
     private func customizeCell() {
         contentView.backgroundColor = .gray

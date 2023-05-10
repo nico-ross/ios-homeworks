@@ -13,6 +13,7 @@ class FeedViewController: UIViewController {
     
     private lazy var firstPostButton: UIButton = {
         let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Begin your Story", for: .normal)
         button.backgroundColor = UIColor(named: "main-blue")
         button.setTitleColor(.white, for: .normal)
@@ -23,14 +24,13 @@ class FeedViewController: UIViewController {
         button.layer.shadowRadius = 3.0
         button.layer.shadowColor = UIColor.black.cgColor
         
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
         button.addTarget(self, action: #selector(showDetails), for: .touchUpInside)
         return button
     }()
     
     private lazy var secondPostButton: UIButton = {
         let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Start your Story", for: .normal)
         button.backgroundColor = UIColor(named: "main-blue")
         button.setTitleColor(.white, for: .normal)
@@ -40,8 +40,6 @@ class FeedViewController: UIViewController {
         button.layer.shadowOpacity = 0.5
         button.layer.shadowRadius = 3.0
         button.layer.shadowColor = UIColor.black.cgColor
-        
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         button.addTarget(self, action: #selector(showDetails), for: .touchUpInside)
         return button
@@ -69,9 +67,8 @@ class FeedViewController: UIViewController {
     }
     
     private func setupView() {
-        navigationItem.title = "Feed"
         view.backgroundColor = UIColor.systemGray6
-//        view.backgroundColor = UIColor(red: 0.85, green: 0.95, blue: 1.00, alpha: 1.00)
+        navigationItem.title = "Feed"
     }
     
     private func addSubviews() {

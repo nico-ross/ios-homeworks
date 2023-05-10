@@ -9,38 +9,45 @@ import UIKit
 
 final class ProfileHeaderView: UIView {
     
+    // MARK: - main subviews
+    
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "icon-256x256")
         imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
         imageView.layer.borderColor = UIColor.white.cgColor
         imageView.layer.borderWidth = 3
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 65
+        imageView.clipsToBounds = true
+        
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapAction)))
         return imageView
     }()
     
     private lazy var fullNameLabel: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
         label.text = "Vasya Pupkin"
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 18.0, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var statusLabel: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Waiting for something..."
         label.textColor = .gray
         label.font = UIFont.systemFont(ofSize: 15.0, weight: .regular)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var statusTextField: UITextField = {
         let textField = UITextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
         textField.layer.backgroundColor = UIColor.white.cgColor
         textField.layer.cornerRadius = 12
         textField.placeholder = "Write new status"
@@ -56,7 +63,6 @@ final class ProfileHeaderView: UIView {
         textField.layer.borderWidth = 1
         textField.textColor = .black
         textField.font = UIFont.systemFont(ofSize: 15.0, weight: .regular)
-        textField.translatesAutoresizingMaskIntoConstraints = false
         
         textField.delegate = self
         return textField
@@ -64,6 +70,7 @@ final class ProfileHeaderView: UIView {
     
     private lazy var setStatusButton: UIButton = {
         let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Show status", for: .normal)
         button.backgroundColor = UIColor(named: "main-blue")
         button.setTitleColor(.white, for: .normal)
@@ -74,11 +81,12 @@ final class ProfileHeaderView: UIView {
         button.layer.shadowOpacity = 0.5
         button.layer.shadowRadius = 3.0
         button.layer.shadowColor = UIColor.black.cgColor
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         return button
     }()
+    
+    // MARK: - view life cycle
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -101,7 +109,7 @@ final class ProfileHeaderView: UIView {
     
     private func setupConstraints() {
         let inset: CGFloat = 16
-
+        
         NSLayoutConstraint.activate([
             avatarImageView.widthAnchor.constraint(equalToConstant: 130),
             avatarImageView.heightAnchor.constraint(equalToConstant: 130),
@@ -129,10 +137,9 @@ final class ProfileHeaderView: UIView {
         ])
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        avatarImageView.layer.cornerRadius = avatarImageView.frame.width / 2
+    @objc private func tapAction() {
+        guard let profileViewController = self.viewController() as? ProfileViewController else { return }
+        profileViewController.openTapAction()
     }
     
     @objc func buttonPressed() {
@@ -151,4 +158,25 @@ extension ProfileHeaderView: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+}
+
+extension UIView {
+    
+    func viewController() -> UIViewController? {
+        var responder: UIResponder? = self
+        while responder != nil {
+            if let viewController = responder as? UIViewController {
+                return viewController
+            }
+            responder = responder?.next
+        }
+        return nil
+    }
+    
+//    var viewController: UIViewController? {
+//        if let responder = self as? UIViewController {
+//            return responder
+//        }
+//        return next?.viewController
+//    }
 }

@@ -28,10 +28,8 @@ class PostViewController: UIViewController {
     }
     
     private func setupView() {
-        navigationItem.title = newPostTitle
         view.backgroundColor = UIColor.systemGray6
-//        view.backgroundColor = UIColor(red: 0.85, green: 0.95, blue: 1.00, alpha: 1.00)
-        
+        navigationItem.title = newPostTitle
         navigationItem.setRightBarButton(barButtonItem, animated: false)
     }
     

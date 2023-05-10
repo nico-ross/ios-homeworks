@@ -18,7 +18,10 @@ class PhotosViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = UIColor.systemGray6
-        collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: CustomCollectionViewCell.identifier)
+        collectionView.register(
+            CustomCollectionViewCell.self,
+            forCellWithReuseIdentifier: CustomCollectionViewCell.identifier
+        )
         collectionView.dataSource = self
         collectionView.delegate = self
         return collectionView
@@ -56,7 +59,7 @@ class PhotosViewController: UIViewController {
     }
 }
 
-// MARK: - UICollectionViewDataSource
+// MARK: - CollectionView DataSource
 
 extension PhotosViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -73,7 +76,7 @@ extension PhotosViewController: UICollectionViewDataSource {
     }
 }
 
-// MARK: - UICollectionViewDelegate
+// MARK: - CollectionView Delegate
 
 extension PhotosViewController: UICollectionViewDelegateFlowLayout {
     
