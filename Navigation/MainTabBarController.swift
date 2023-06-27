@@ -22,7 +22,7 @@ class MainTabBarController: UITabBarController {
         feedNavigationViewController.tabBarItem.title = "Feed"
         feedNavigationViewController.tabBarItem.image = UIImage(systemName: "scroll.fill")
         
-        let profileViewController = LogInViewController()
+        let profileViewController = LoginViewController()
         
         let profileNavigationViewController = UINavigationController(rootViewController: profileViewController)
         profileNavigationViewController.tabBarItem.title = "Profile"

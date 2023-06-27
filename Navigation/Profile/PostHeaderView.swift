@@ -9,7 +9,7 @@ import UIKit
 
 class PostHeaderView: UIView {
     
-    private let contentView: UIView = {
+    private lazy var contentView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.systemBackground
@@ -62,6 +62,7 @@ class PostHeaderView: UIView {
         addSubview(contentView)
         addSubview(allPostsButton)
         addSubview(myPostsButton)
+        addTopBorder(with: UIColor.separator, andWidth: 0.33)
     }
     
     private func setupConstraints() {
@@ -77,18 +78,24 @@ class PostHeaderView: UIView {
             allPostsButton.topAnchor.constraint(equalTo: topAnchor, constant: inset),
             allPostsButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset),
             allPostsButton.widthAnchor.constraint(equalToConstant: 85),
-            allPostsButton.heightAnchor.constraint(equalToConstant: 32),
             allPostsButton.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             myPostsButton.leadingAnchor.constraint(equalTo: allPostsButton.trailingAnchor, constant: inset),
             myPostsButton.centerYAnchor.constraint(equalTo: allPostsButton.centerYAnchor),
-            myPostsButton.widthAnchor.constraint(equalToConstant: 85),
-            myPostsButton.heightAnchor.constraint(equalToConstant: 32)
+            myPostsButton.widthAnchor.constraint(equalToConstant: 85)
         ])
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        contentView.roundCorners(corners: [.topLeft, .topRight], radius: 20.0)
+//        contentView.roundCorners(corners: [.topLeft, .topRight], radius: 20.0)
+    }
+    
+    private func addTopBorder(with color: UIColor?, andWidth borderWidth: CGFloat) {
+        let border = UIView()
+        border.backgroundColor = color
+        border.autoresizingMask = [.flexibleWidth]
+        border.frame = CGRect(x: 0, y: 5, width: frame.size.width, height: borderWidth)
+        addSubview(border)
     }
 }

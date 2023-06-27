@@ -13,6 +13,7 @@ struct Post {
     let image: String
     var likes: Int
     var views: Int
+    var isLiked: Bool = false
 }
 
 extension Post {

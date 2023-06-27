@@ -68,6 +68,7 @@ class FeedViewController: UIViewController {
     
     private func setupView() {
         view.backgroundColor = UIColor.systemGray6
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Feed"
     }
     

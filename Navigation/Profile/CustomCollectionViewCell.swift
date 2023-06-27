@@ -7,13 +7,22 @@
 
 import UIKit
 
+protocol CustomCollectionViewCellDelegate: AnyObject {
+    func didTapImage(_ image: UIImage?)
+}
+
 final class CustomCollectionViewCell: UICollectionViewCell {
+    
+    weak var delegate: CustomCollectionViewCellDelegate?
     
     private lazy var photoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = UIColor.black
         imageView.contentMode = .scaleAspectFit
+        
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapAction)))
         return imageView
     }()
     
@@ -58,5 +67,9 @@ final class CustomCollectionViewCell: UICollectionViewCell {
             photoImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             photoImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
+    }
+    
+    @objc private func tapAction() {
+        delegate?.didTapImage(photoImageView.image)
     }
 }
