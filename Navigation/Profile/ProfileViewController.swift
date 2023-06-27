@@ -8,7 +8,9 @@
 import UIKit
 
 final class ProfileViewController: UIViewController {
-        
+    
+    private let profileHeaderView = ProfileHeaderView()
+    
     private var widthOpenedAvatarImageView = NSLayoutConstraint()
     private var heightOpenedAvatarImageView = NSLayoutConstraint()
     private var topOpenedAvatarImageView = NSLayoutConstraint()
@@ -19,7 +21,7 @@ final class ProfileViewController: UIViewController {
     
     // Table View properties
     
-    fileprivate let data = Post.make()
+    fileprivate var data = Post.make()
     
     private lazy var profileTableView: UITableView = {
         let tableView = UITableView.init(frame: .zero, style: .grouped)
@@ -28,6 +30,7 @@ final class ProfileViewController: UIViewController {
         tableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: PhotosTableViewCell.identifier)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.rowHeight = UITableView.automaticDimension
         return tableView
     }()
     
@@ -44,7 +47,7 @@ final class ProfileViewController: UIViewController {
     private lazy var closeImageViewButton: UIButton = {
         let button = UIButton()
         let buttonSizeConfig = UIImage.SymbolConfiguration(pointSize: 26, weight: .medium, scale: .default)
-        let buttonImage = UIImage(systemName: "xmark.app.fill", withConfiguration: buttonSizeConfig)
+        let buttonImage = UIImage(systemName: "xmark.circle.fill", withConfiguration: buttonSizeConfig)
         
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(buttonImage, for: .normal)
@@ -85,6 +88,7 @@ final class ProfileViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = UIColor.systemGray6
         navigationController?.navigationBar.isHidden = true
+        tabBarController?.tabBar.isHidden = false
     }
     
     private func addSubviews() {
@@ -131,6 +135,10 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Animation methods
     
+    public func reloadProfileTableViewData() {
+        profileTableView.reloadData()
+    }
+    
     public func openTapAction() {
         openAvatar()
     }
@@ -175,6 +183,11 @@ final class ProfileViewController: UIViewController {
         }
     }
     
+    @objc public func pushToPhotosViewController() {
+        let photosViewController = PhotosViewController()
+        navigationController?.pushViewController(photosViewController, animated: true)
+    }
+    
 //    private func tuneTableView() {
 //        postTableView.estimatedRowHeight = 530.0
 //
@@ -207,16 +220,13 @@ extension ProfileViewController: UITableViewDataSource {
             withIdentifier: CustomTableViewCell.identifier,
             for: indexPath
         ) as? CustomTableViewCell else { fatalError("could not dequeueReusableCell") }
-        cell.setupCell(data[indexPath.row])
+        cell.setupCell(data[indexPath.row], indexPath: indexPath)
+        cell.delegate = self
         return cell
     }
 }
 
 extension ProfileViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        UITableView.automaticDimension
-    }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         UITableView.automaticDimension
@@ -229,7 +239,7 @@ extension ProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch section {
         case 0:
-            return ProfileHeaderView()
+            return profileHeaderView
         case 1:
             return PostHeaderView()
         default:
@@ -241,12 +251,56 @@ extension ProfileViewController: UITableViewDelegate {
         return UIView()
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        guard indexPath.section == 0 else { return }
-        navigationController?.pushViewController(PhotosViewController(), animated: true)
+//    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+//        data[indexPath.row].views += 1
+//        return indexPath
+//    }
+//
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        tableView.deselectRow(at: indexPath, animated: true)
+//
+//        guard indexPath.section == 1 else { return }
+//        let detailTableViewCellController = DetailTableViewCellController()
+//        detailTableViewCellController.setupCell(data[indexPath.row])
+//        navigationController?.pushViewController(detailTableViewCellController, animated: false)
+//        profileTableView.reloadRows(at: [indexPath], with: .none)
+//    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            data.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
     }
 }
+
+extension ProfileViewController: LikeCountDelegate {
+    
+    func plusLikeToData(at indexPath: IndexPath) {
+        data[indexPath.row].likes += 1
+        data[indexPath.row].isLiked = true
+//        profileTableView.reloadRows(at: [indexPath], with: .none)
+    }
+    
+    func minusLikeFromData(at indexPath: IndexPath) {
+        data[indexPath.row].likes -= 1
+        data[indexPath.row].isLiked = false
+//        profileTableView.reloadRows(at: [indexPath], with: .none)
+    }
+    
+    func plusViewToData(at indexPath: IndexPath) {
+        data[indexPath.row].views += 1
+        
+        let detailTableViewCellController = DetailTableViewCellController()
+        detailTableViewCellController.setupCell(data[indexPath.row], indexPath: indexPath)
+        navigationController?.pushViewController(detailTableViewCellController, animated: false)
+    }
+}
+
 
 extension UITableView {
     //set the tableHeaderView so that the required height can be determined, update the header's frame and set it again

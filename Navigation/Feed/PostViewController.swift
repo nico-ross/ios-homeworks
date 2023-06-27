@@ -30,7 +30,7 @@ class PostViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = UIColor.systemGray6
         navigationItem.title = newPostTitle
-        navigationItem.setRightBarButton(barButtonItem, animated: false)
+        navigationItem.setRightBarButton(barButtonItem, animated: true)
     }
     
     @objc func showDetails() {

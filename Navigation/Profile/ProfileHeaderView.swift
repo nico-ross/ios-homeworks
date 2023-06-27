@@ -7,10 +7,16 @@
 
 import UIKit
 
+protocol ProfileHeaderViewDelegate: AnyObject {
+    func reloadProfileHeaderViewData()
+}
+
 final class ProfileHeaderView: UIView {
     
-    // MARK: - main subviews
+    weak var delegate: ProfileHeaderViewDelegate?
     
+    // MARK: - main subviews
+        
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -36,32 +42,17 @@ final class ProfileHeaderView: UIView {
         return label
     }()
     
-    private lazy var statusLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Waiting for something..."
-        label.textColor = .gray
-        label.font = UIFont.systemFont(ofSize: 15.0, weight: .regular)
-        return label
-    }()
-    
     private lazy var statusTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.layer.backgroundColor = UIColor.white.cgColor
-        textField.layer.cornerRadius = 12
         textField.placeholder = "Write new status"
-        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
-        textField.leftViewMode = .always
         
         textField.autocorrectionType = UITextAutocorrectionType.no
         textField.keyboardType = UIKeyboardType.default
         textField.returnKeyType = UIReturnKeyType.done
         textField.clearButtonMode = UITextField.ViewMode.whileEditing
         
-        textField.layer.borderColor = UIColor.black.cgColor
-        textField.layer.borderWidth = 1
-        textField.textColor = .black
+        textField.textColor = .systemGray
         textField.font = UIFont.systemFont(ofSize: 15.0, weight: .regular)
         
         textField.delegate = self
@@ -75,7 +66,7 @@ final class ProfileHeaderView: UIView {
         button.backgroundColor = UIColor(named: "main-blue")
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        button.layer.cornerRadius = 14
+        button.layer.cornerRadius = 10
         //shadows
         button.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
         button.layer.shadowOpacity = 0.5
@@ -102,39 +93,49 @@ final class ProfileHeaderView: UIView {
     private func addSubviews() {
         addSubview(avatarImageView)
         addSubview(fullNameLabel)
-        addSubview(statusLabel)
         addSubview(statusTextField)
         addSubview(setStatusButton)
     }
     
     private func setupConstraints() {
         let inset: CGFloat = 16
+        let avatarImageViewHeightAnchorConstraint = avatarImageView.heightAnchor.constraint(equalToConstant: 130)
+        avatarImageViewHeightAnchorConstraint.priority = UILayoutPriority(rawValue: 990)
         
+        let avatarImageViewBottomAnchorConstraint = avatarImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -inset)
+        avatarImageViewBottomAnchorConstraint.priority = UILayoutPriority(rawValue: 990)
+
         NSLayoutConstraint.activate([
             avatarImageView.widthAnchor.constraint(equalToConstant: 130),
-            avatarImageView.heightAnchor.constraint(equalToConstant: 130),
+            avatarImageViewHeightAnchorConstraint,
             avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: inset),
             avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset),
+            avatarImageViewBottomAnchorConstraint,
             
             fullNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 27),
             fullNameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: inset),
             fullNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset),
             
-            statusLabel.bottomAnchor.constraint(equalTo: statusTextField.topAnchor, constant: -5),
-            statusLabel.leadingAnchor.constraint(equalTo: fullNameLabel.leadingAnchor),
-            statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset),
-            
-            statusTextField.heightAnchor.constraint(equalToConstant: 40),
-            statusTextField.leadingAnchor.constraint(equalTo: statusLabel.leadingAnchor, constant: -10),
+            statusTextField.topAnchor.constraint(equalTo: fullNameLabel.bottomAnchor, constant: inset / 2),
+            statusTextField.leadingAnchor.constraint(equalTo: fullNameLabel.leadingAnchor),
             statusTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset),
-            statusTextField.bottomAnchor.constraint(equalTo: avatarImageView.bottomAnchor),
             
-            setStatusButton.heightAnchor.constraint(equalToConstant: 50),
-            setStatusButton.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: inset),
-            setStatusButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset),
+            setStatusButton.heightAnchor.constraint(equalToConstant: 40),
+            setStatusButton.leadingAnchor.constraint(equalTo: fullNameLabel.leadingAnchor),
             setStatusButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset),
-            setStatusButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -inset)
+            setStatusButton.bottomAnchor.constraint(equalTo: avatarImageView.bottomAnchor)
         ])
+    }
+    
+    private func shakeAnimation(_ view: UIView) {
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.07
+        animation.repeatCount = 2
+        animation.autoreverses = true
+        animation.fromValue = NSValue(cgPoint: CGPoint(x: view.center.x - 5, y: view.center.y))
+        animation.toValue = NSValue(cgPoint: CGPoint(x: view.center.x + 5, y: view.center.y))
+        
+        view.layer.add(animation, forKey: "position")
     }
     
     @objc private func tapAction() {
@@ -144,18 +145,25 @@ final class ProfileHeaderView: UIView {
     
     @objc func buttonPressed() {
         guard let textFieldText = statusTextField.text else { return }
-        if textFieldText == "" {
-            statusLabel.text = "Waiting for something..."
+        if textFieldText.isEmpty {
+            shakeAnimation(statusTextField)
         } else {
-            statusLabel.text = textFieldText
+            statusTextField.attributedPlaceholder = NSAttributedString(
+                string: textFieldText,
+                attributes: [NSAttributedString.Key.foregroundColor: UIColor.darkGray]
+            )
+            statusTextField.text = ""
+            statusTextField.resignFirstResponder()
+            ProfileViewController().reloadProfileTableViewData()
         }
     }
 }
-    
+
 extension ProfileHeaderView: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        buttonPressed()
         return true
     }
 }
