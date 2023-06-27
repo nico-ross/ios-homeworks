@@ -97,6 +97,7 @@ class LogInViewController: UIViewController {
     
     private lazy var loginButton: UIButton = {
         let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor(named: "main-blue")
         button.setTitle("Log in", for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -104,9 +105,7 @@ class LogInViewController: UIViewController {
 //        button.layer.contents = UIImage(named: "blue-pixel")?.cgImage
         button.contentMode = .scaleToFill
         button.clipsToBounds = true
-        
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
+                
         button.addTarget(self, action: #selector(loginButtonPressed), for: .touchUpInside)
         return button
     }()
@@ -118,7 +117,6 @@ class LogInViewController: UIViewController {
         addSubviews()
         setupConstraints()
     }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -138,7 +136,6 @@ class LogInViewController: UIViewController {
     @objc func willHideKeyboard(_ notification: NSNotification) {
         scrollView.contentInset.bottom = .zero
     }
-    
     
     private func setupView() {
         view.backgroundColor = UIColor.white
